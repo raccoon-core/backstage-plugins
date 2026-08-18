@@ -9,7 +9,7 @@ resources to make it easier to get your contribution accepted.
 
 The official support channels, for both users and contributors, are:
 
-- GitHub [issues](https://github.com/racooncorp/backstage-plugins/issues)
+- GitHub [issues](https://github.com/raccoon-core/backstage-plugins/issues)
 
 ## How to Contribute
 
@@ -24,7 +24,7 @@ Pull Requests (PRs) are the main and exclusive way to contribute to the project.
 ```
 git clone git@github.com:your_github_username/backstage-plugins.git
 cd backstage-plugins
-git remote add upstream https://github.com/racooncorp/backstage-plugins.git
+git remote add upstream https://github.com/raccoon-core/backstage-plugins.git
 git fetch upstream
 ```
 
@@ -83,15 +83,15 @@ In general, changesets are not needed for documentation, build utilities or simi
 5. Add the generated changeset to git
 6. Push the commit with your changeset to the branch associated with your PR
 
-Merging to `main` opens/updates a "Version Packages" PR (via the `Release` workflow). Merging that PR publishes the updated packages to npm under the `@racooncorp` scope.
+Merging to `main` opens/updates a "Version Packages" PR (via the `Release` workflow). Merging that PR publishes the updated packages to npm under the `@raccoon-core` scope.
 
 ## Graduating a plugin to backstage-community
 
 Once a plugin here is stable and org-agnostic, open a PR against
 [backstage/community-plugins](https://github.com/backstage/community-plugins)
 following their [contribution guide](https://github.com/backstage/community-plugins/blob/main/CONTRIBUTING.md).
-Deprecate the `@racooncorp` package in its final changeset, pointing consumers
+Deprecate the `@raccoon-core` package in its final changeset, pointing consumers
 at the new `@backstage-community` package.
 
-[fork]: https://github.com/racooncorp/backstage-plugins/fork
+[fork]: https://github.com/raccoon-core/backstage-plugins/fork
 [commit-message]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html

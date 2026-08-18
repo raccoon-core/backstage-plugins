@@ -1,9 +1,9 @@
 {
   "name": "root",
-  "homepage": "https://github.com/racooncorp/backstage-plugins",
+  "homepage": "https://github.com/raccoon-core/backstage-plugins",
   "repository": {
     "type": "git",
-    "url": "https://github.com/racooncorp/backstage-plugins.git"
+    "url": "https://github.com/raccoon-core/backstage-plugins.git"
   },
   "license": "Apache-2.0",
   "version": "1.0.0",

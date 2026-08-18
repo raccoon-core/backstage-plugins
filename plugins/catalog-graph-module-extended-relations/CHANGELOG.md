@@ -1,4 +1,4 @@
-# @racooncorp/backstage-plugin-catalog-graph-module-extended-relations
+# @raccoon-core/backstage-plugin-catalog-graph-module-extended-relations
 
 ## 0.2.3
 
