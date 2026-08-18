@@ -1,5 +1,11 @@
 # @racooncorp/backstage-plugin-catalog-graph-module-extended-relations
 
+## 0.2.1
+
+### Patch Changes
+
+- f59b79a: add install instructions and switch to npm trusted publisher
+
 ## 0.2.0
 
 ### Minor Changes
