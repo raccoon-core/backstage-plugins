@@ -1,3 +1,6 @@
+# DO NOT RENAME THIS FILE.
+# NPM Trusted publishing (OIDC) requires this file to be named `publish.yml` and located in `.github/workflows/`.
+
 name: Release
 on:
   push:
@@ -6,6 +9,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 jobs:
   release:
@@ -28,6 +32,11 @@ jobs:
       - name: Install Dependencies
         run: yarn install --immutable
 
+      # Trusted publishing (OIDC) requires npm >= 11.5.1 — newer than what's
+      # bundled with some Node LTS releases.
+      - name: Update npm for trusted publishing support
+        run: npm install -g npm@latest
+
       - name: Build type declarations
         run: yarn tsc
 
@@ -41,4 +50,3 @@ jobs:
           publish: yarn run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
