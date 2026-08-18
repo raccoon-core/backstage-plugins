@@ -1,5 +1,11 @@
 # @raccoon-core/backstage-plugin-catalog-graph-module-extended-relations
 
+## 0.2.4
+
+### Patch Changes
+
+- cb4d177: Rename org
+
 ## 0.2.3
 
 ### Patch Changes
