@@ -1,7 +1,7 @@
 # catalog-graph-module-extended-relations
 
 Frontend module (`pluginId: 'catalog-graph'`) that overrides two extensions of
-`@backstage/plugin-catalog-graph`. Published standalone under `@racooncorp` —
+`@backstage/plugin-catalog-graph`. Published standalone under `@raccoon-core` —
 it has no dependency on any host app, only upstream Backstage APIs. No
 organisation-specific names, annotations, or hostnames anywhere in it, so it's
 a candidate for graduating to `backstage/community-plugins` once stable (see

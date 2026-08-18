@@ -1,4 +1,4 @@
-# @racooncorp/backstage-plugin-catalog-graph-module-extended-relations
+# @raccoon-core/backstage-plugin-catalog-graph-module-extended-relations
 
 A frontend module (`pluginId: 'catalog-graph'`) that overrides two extensions
 from `@backstage/plugin-catalog-graph`:
@@ -17,7 +17,7 @@ behaviour.
 Add the package to your app:
 
 ```sh
-yarn --cwd packages/app add @racooncorp/backstage-plugin-catalog-graph-module-extended-relations
+yarn --cwd packages/app add @raccoon-core/backstage-plugin-catalog-graph-module-extended-relations
 ```
 
 Register it in `packages/app/src/App.tsx`'s `features` array, alongside the
@@ -26,7 +26,7 @@ extensions, it doesn't replace it:
 
 ```tsx
 import catalogGraphPlugin from '@backstage/plugin-catalog-graph/alpha';
-import catalogGraphModuleExtendedRelations from '@racooncorp/backstage-plugin-catalog-graph-module-extended-relations';
+import catalogGraphModuleExtendedRelations from '@raccoon-core/backstage-plugin-catalog-graph-module-extended-relations';
 
 export const app = createApp({
   features: [

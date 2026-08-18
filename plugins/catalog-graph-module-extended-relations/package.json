@@ -1,9 +1,9 @@
 {
-  "name": "@racooncorp/backstage-plugin-catalog-graph-module-extended-relations",
-  "homepage": "https://github.com/racooncorp/backstage-plugins/tree/main/plugins/catalog-graph-module-extended-relations",
+  "name": "@raccoon-core/backstage-plugin-catalog-graph-module-extended-relations",
+  "homepage": "https://github.com/raccoon-core/backstage-plugins/tree/main/plugins/catalog-graph-module-extended-relations",
   "repository": {
     "type": "git",
-    "url": "https://github.com/racooncorp/backstage-plugins.git",
+    "url": "https://github.com/raccoon-core/backstage-plugins.git",
     "directory": "plugins/catalog-graph-module-extended-relations"
   },
   "version": "0.2.3",

@@ -3,14 +3,14 @@
 Set of Backstage plugins used in production before pushing them to
 [backstage/community-plugins](https://github.com/backstage/community-plugins).
 
-Published to npm under the [`@racooncorp`](https://www.npmjs.com/org/racooncorp) scope, versioned with
+Published to npm under the [`@raccoon-core`](https://www.npmjs.com/org/raccoon-core) scope, versioned with
 [Changesets](https://github.com/changesets/changesets).
 
 ## Plugins
 
-| Plugin                                                                                     | Package                                                                                                                                                                      |
-| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [catalog-graph-module-extended-relations](plugins/catalog-graph-module-extended-relations) | [`@racooncorp/backstage-plugin-catalog-graph-module-extended-relations`](https://www.npmjs.com/package/@racooncorp/backstage-plugin-catalog-graph-module-extended-relations) |
+| Plugin                                                                                     | Package                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [catalog-graph-module-extended-relations](plugins/catalog-graph-module-extended-relations) | [`@raccoon-core/backstage-plugin-catalog-graph-module-extended-relations`](https://www.npmjs.com/package/@raccoon-core/backstage-plugin-catalog-graph-module-extended-relations) |
 
 ## Local development
 
