@@ -284,8 +284,8 @@ export function ExtendedEdgeWithTooltip({
         .catch(() => {
           /* ignore */
         });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [catalogApi, e.details],
   );
   const handleMouseLeave = useCallback(() => setPos(null), []);
