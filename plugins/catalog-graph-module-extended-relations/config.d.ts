@@ -9,6 +9,12 @@ export interface Config {
        * Each entry overrides either a whole `kind`'s palette, or - when
        * `type` is also given - just that `kind`+`spec.type` combination
        * (e.g. kind: Component, type: third-party).
+       *
+       * Read by frontend code only (`GraphPaletteConfigLoader.tsx`) - every
+       * field below must stay `@visibility frontend` or it gets stripped
+       * before reaching the browser (config defaults to backend-only
+       * visibility unless a schema says otherwise).
+       * @deepVisibility frontend
        */
       palette?: Array<{
         /**
@@ -23,17 +29,14 @@ export interface Config {
         /**
          * Accent color (CSS color string) used for the node's left border
          * bar and badge text/border.
-         * @visibility frontend
          */
         accent: string;
         /**
          * Node background fill used in light theme.
-         * @visibility frontend
          */
         tint: string;
         /**
          * Node background fill used in dark theme.
-         * @visibility frontend
          */
         darkTint: string;
       }>;

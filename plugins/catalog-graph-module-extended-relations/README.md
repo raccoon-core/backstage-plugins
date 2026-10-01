@@ -58,11 +58,16 @@ catalogGraph:
         tint: '#eff6ff'
         darkTint: '#1e40af'
       # kind+spec.type override — only entities with this exact combination
-      - kind: component
+      - kind: Component
         type: third-party
-        accent: '#6b7280'
-        tint: '#f3f4f6'
-        darkTint: '#1f2937'
+        accent: &thirdPartyAccent '#6b7280'
+        tint: &thirdPartyTint '#f3f4f6'
+        darkTint: &thirdPartyDarkTint '#384250'
+      - kind: Group
+        type: third-parties
+        accent: *thirdPartyAccent
+        tint: *thirdPartyTint
+        darkTint: *thirdPartyDarkTint
 ```
 
 `accent` is the node's left border bar / badge text color, `tint`/`darkTint`
