@@ -9,13 +9,15 @@ the repo root [CONTRIBUTING.md](../../CONTRIBUTING.md)).
 
 ```
 src/
-  module.tsx                      createFrontendModule — the 3 overrides below
+  module.tsx                      createFrontendModule — the 4 overrides below
   ExtendedEntityCatalogGraphCard.tsx   overrides entity-card:catalog-graph/relations
   CustomGraphNode.tsx              shared node renderer (icon, kind colour, badge)
   ExtendedRelationTooltipLabel.tsx overrides page:catalog-graph's edge renderer
   DependencyGraphZoomOverrides.tsx AppRootElementBlueprint — global d3-zoom patch
+  GraphPaletteConfigLoader.tsx     AppRootElementBlueprint — loads palette config overrides
   graphUtils.ts                    kind -> {icon, colour} palette, badge helpers
   index.ts                         default export: catalogGraphModuleExtendedRelations
+config.d.ts                        schema for catalogGraph.extendedRelations.palette
 ```
 
 A consuming app registers this in its `features` array (`createApp`)
@@ -46,6 +48,34 @@ app, or via `backstage-cli package test`.
   pan/zoom survives re-renders instead of resetting to center. Targets
   `svg#dependency-graph` by selector since `DependencyGraph` exposes no ref/
   callback for this.
+
+- **`AppRootElementBlueprint`** (`GraphPaletteConfigLoader`, named
+  `graph-palette-config-loader` to avoid colliding with the one above — a
+  module can only register one unnamed extension per blueprint kind) — reads
+  `catalogGraph.extendedRelations.palette` from app-config via `useApi(configApiRef)`
+  in a `useEffect` and calls `applyPaletteOverrides` to populate `graphUtils.ts`'s
+  module-level override maps. Renders nothing.
+
+## Node color palette is config-overridable, not just hardcoded
+
+`graphUtils.ts`'s `getNodeColor`/`getNodeTintFill` take an optional `specType`
+third/second param and resolve color through `resolveKindPalette`, which checks
+(in order): a config `kind`+`type` override, a config whole-`kind` override,
+the built-in `KIND_PALETTE`, then `DEFAULT_KIND_PALETTE`. **There are no
+built-in `kind`+`type` overrides** — e.g. graying out
+`kind: Component, type: third-party` is not hardcoded here; it's something
+each consuming app opts into via `catalogGraph.extendedRelations.palette`
+config (see `README.md`/`config.d.ts`). This was a deliberate choice: this
+package has no organisation-specific opinions (see graduation note above), so
+app-specific recoloring choices belong in app-config, not in this source.
+
+The config is read once at app startup into mutable module state
+(`configKindPalette`/`configSpecTypeOverrides`), not passed as React props —
+`getNodeColor`/`getNodeTintFill` are consumed as plain functions outside any
+component tree too (e.g. cockpit's `packages/app/src/modules/search/kindColors.ts`),
+so they can't depend on a hook. If `GraphPaletteConfigLoader` hasn't mounted/run
+its effect yet (e.g. very first paint), these fall back to the built-in palette
+until the effect fires — expected, not a bug.
 
 ## Relation direction is normalised, not passed through as-is
 

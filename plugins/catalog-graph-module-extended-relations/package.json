@@ -11,6 +11,7 @@
   "description": "Custom node/edge styling and spec.extendedRelations merging for the catalog-graph plugin's entity card and standalone graph page.",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "configSchema": "config.d.ts",
   "publishConfig": {
     "access": "public",
     "main": "dist/index.esm.js",
@@ -70,6 +71,7 @@
     "react-router-dom": "^6.30.2"
   },
   "files": [
-    "dist"
+    "dist",
+    "config.d.ts"
   ]
 }
