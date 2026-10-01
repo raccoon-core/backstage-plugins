@@ -173,8 +173,12 @@ export function CustomGraphNode({
   const titleY = padding + titleHeight / 2;
   const subtitleY = titleY + titleHeight / 2 + lineGap + subtitleHeight / 2;
 
-  const nodeColor = getNodeColor(entity.kind);
-  const tintFill = getNodeTintFill(entity.kind, theme.palette.type === 'dark');
+  const nodeColor = getNodeColor(entity.kind, specType);
+  const tintFill = getNodeTintFill(
+    entity.kind,
+    theme.palette.type === 'dark',
+    specType,
+  );
   const borderColor = withAlpha(nodeColor, 0.7);
 
   const sanitizedId = id.replace(/[^a-zA-Z0-9]/g, '-');

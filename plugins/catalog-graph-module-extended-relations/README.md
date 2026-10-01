@@ -41,4 +41,33 @@ No further configuration is required. The relations card and the standalone
 `/catalog-graph` page will pick up `spec.extendedRelations` on any entity that
 has it, and fall back to native catalog relations otherwise.
 
+## Configuration
+
+The node color palette (same one reused by `getNodeColor`/`getNodeTintFill`
+for e.g. search result kind badges) can be overridden per app via
+`app-config.yaml`. Each entry overrides either a whole `kind`'s palette, or —
+with `type` — just that `kind`+`spec.type` combination:
+
+```yaml
+catalogGraph:
+  extendedRelations:
+    palette:
+      # Whole-kind override
+      - kind: component
+        accent: '#3b82f6'
+        tint: '#eff6ff'
+        darkTint: '#1e40af'
+      # kind+spec.type override — only entities with this exact combination
+      - kind: component
+        type: third-party
+        accent: '#6b7280'
+        tint: '#f3f4f6'
+        darkTint: '#1f2937'
+```
+
+`accent` is the node's left border bar / badge text color, `tint`/`darkTint`
+are the node background fill for light/dark theme respectively. See
+[`config.d.ts`](./config.d.ts) for the full schema. Kinds/types without a
+matching entry keep the built-in palette.
+
 See `CLAUDE.md` for the file layout and implementation notes.

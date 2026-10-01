@@ -4,6 +4,7 @@ import {
 } from '@backstage/frontend-plugin-api';
 import catalogGraphPlugin from '@backstage/plugin-catalog-graph/alpha';
 import { DependencyGraphZoomOverrides } from './DependencyGraphZoomOverrides';
+import { GraphPaletteConfigLoader } from './GraphPaletteConfigLoader';
 
 /**
  * Replaces the default catalog-graph entity card with one that also merges in
@@ -60,11 +61,23 @@ const dependencyGraphZoomOverrides = AppRootElementBlueprint.make({
   },
 });
 
+/**
+ * Applies `catalogGraph.extendedRelations.palette` overrides from app-config
+ * onto the node color palette (see `GraphPaletteConfigLoader.tsx`).
+ */
+const graphPaletteConfigLoader = AppRootElementBlueprint.make({
+  name: 'graph-palette-config-loader',
+  params: {
+    element: <GraphPaletteConfigLoader />,
+  },
+});
+
 export const catalogGraphModuleExtendedRelations = createFrontendModule({
   pluginId: 'catalog-graph',
   extensions: [
     customRelationsCard,
     customGraphPage,
     dependencyGraphZoomOverrides,
+    graphPaletteConfigLoader,
   ],
 });

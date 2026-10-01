@@ -34,10 +34,24 @@ import {
 } from 'react-icons/si';
 import type { ComponentType } from 'react';
 
-const KIND_PALETTE: Record<
-  string,
-  { accent: string; tint: string; darkTint: string }
-> = {
+export interface KindPaletteColors {
+  accent: string;
+  tint: string;
+  darkTint: string;
+}
+
+/**
+ * One entry of the `catalogGraph.extendedRelations.palette` config array.
+ * Omitting `type` overrides the whole `kind`'s palette; giving it scopes the
+ * override to just that `kind`+`spec.type` combination (e.g. kind: Component,
+ * type: third-party).
+ */
+export interface PaletteOverrideEntry extends KindPaletteColors {
+  kind: string;
+  type?: string;
+}
+
+const KIND_PALETTE: Record<string, KindPaletteColors> = {
   component: { accent: '#3b82f6', tint: '#eff6ff', darkTint: '#1e40af' },
   system: { accent: '#6366f1', tint: '#eef2ff', darkTint: '#3730a3' },
   domain: { accent: '#7c3aed', tint: '#f5f3ff', darkTint: '#5b21b6' },
@@ -55,16 +69,59 @@ const DEFAULT_KIND_PALETTE = {
   darkTint: '#1e293b',
 };
 
-export function getNodeColor(kind: string | undefined): string {
-  if (!kind) return DEFAULT_KIND_PALETTE.accent;
-  return (KIND_PALETTE[kind.toLowerCase()] ?? DEFAULT_KIND_PALETTE).accent;
+// Populated at runtime from `catalogGraph.extendedRelations.palette` config by
+// `applyPaletteOverrides` (called once by `GraphPaletteConfigLoader`, mounted at the app root in
+// module.tsx). There are no built-in spec.type overrides - kind:type recoloring (e.g. kind:
+// Component, type: third-party) is config-only, left to each consuming app.
+let configKindPalette: Record<string, KindPaletteColors> = {};
+let configSpecTypeOverrides: Record<string, KindPaletteColors> = {};
+
+export function applyPaletteOverrides(
+  entries: readonly PaletteOverrideEntry[],
+): void {
+  const kindPalette: Record<string, KindPaletteColors> = {};
+  const specTypeOverrides: Record<string, KindPaletteColors> = {};
+  for (const { kind, type, accent, tint, darkTint } of entries) {
+    const colors: KindPaletteColors = { accent, tint, darkTint };
+    if (type) {
+      specTypeOverrides[`${kind.toLowerCase()}:${type.toLowerCase()}`] = colors;
+    } else {
+      kindPalette[kind.toLowerCase()] = colors;
+    }
+  }
+  configKindPalette = kindPalette;
+  configSpecTypeOverrides = specTypeOverrides;
+}
+
+function resolveKindPalette(
+  kind: string | undefined,
+  specType: string | undefined,
+): KindPaletteColors {
+  const kindKey = kind?.toLowerCase();
+  const typeKey = specType?.toLowerCase();
+  if (kindKey && typeKey) {
+    const override = configSpecTypeOverrides[`${kindKey}:${typeKey}`];
+    if (override) return override;
+  }
+  if (!kindKey) return DEFAULT_KIND_PALETTE;
+  return (
+    configKindPalette[kindKey] ?? KIND_PALETTE[kindKey] ?? DEFAULT_KIND_PALETTE
+  );
+}
+
+export function getNodeColor(
+  kind: string | undefined,
+  specType?: string,
+): string {
+  return resolveKindPalette(kind, specType).accent;
 }
 
 export function getNodeTintFill(
   kind: string | undefined,
   isDark = false,
+  specType?: string,
 ): string {
-  const p = KIND_PALETTE[kind?.toLowerCase() ?? ''] ?? DEFAULT_KIND_PALETTE;
+  const p = resolveKindPalette(kind, specType);
   return isDark ? p.darkTint : p.tint;
 }
 
