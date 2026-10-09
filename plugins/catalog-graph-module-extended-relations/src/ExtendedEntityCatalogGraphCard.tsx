@@ -123,9 +123,11 @@ export function ExtendedEntityCatalogGraphCard({
         'metadata.name',
         'metadata.namespace',
         'metadata.title',
+        'metadata.description',
         'spec.type',
         'spec.lifecycle',
         'spec.system',
+        'spec.owner',
       ],
     });
 

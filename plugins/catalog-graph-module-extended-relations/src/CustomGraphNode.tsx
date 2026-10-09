@@ -197,7 +197,7 @@ export function CustomGraphNode({
   const paddedIconWidth = hasKindIcon ? iconSize + padding : 0;
   const textWidth = Math.max(titleWidth, subtitleWidth);
   const minWidthForBadge =
-    badgeWidth > 0 ? accentWidth + 4 + badgeWidth + 10 + 4 : 0;
+    badgeWidth > 0 ? accentWidth + badgeWidth + 10 + 4 : 0;
   const contentWidth = accentWidth + paddedIconWidth + textWidth + padding * 2;
   const paddedWidth = Math.max(contentWidth, minWidthForBadge);
   const contentHeight =
@@ -259,7 +259,7 @@ export function CustomGraphNode({
         (() => {
           const badgePadX = 5;
           const badgeH = 14;
-          const badgeX = accentWidth + 4;
+          const badgeX = accentWidth;
           const badgeY = -(badgeH / 2);
           const badgeW = badgeWidth + badgePadX * 2;
           const r = 4;

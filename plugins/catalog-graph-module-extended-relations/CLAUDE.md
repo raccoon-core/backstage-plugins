@@ -108,3 +108,10 @@ module-level state needed. `system`/`owner` titles come from
 (the hook is always called, against a `__none__` placeholder ref otherwise).
 Defaults (`title` + `system`) match the pre-config behaviour. Bare `owner`
 refs resolve with default kind `Group`.
+
+The relations card fetches referenced entities with an explicit `fields` list
+(`ExtendedEntityCatalogGraphCard`). Any entity field a node line can display
+(`metadata.title`/`description`, `spec.type`/`lifecycle`/`system`/`owner`) must
+be in that list, or non-root nodes silently lack it — the root entity is the
+only one passed through whole. The standalone page fetches full entities, so it
+isn't affected. Add to the list when adding a new `NodeField`.
