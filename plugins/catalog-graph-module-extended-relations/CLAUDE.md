@@ -15,6 +15,7 @@ src/
   ExtendedRelationTooltipLabel.tsx overrides page:catalog-graph's edge renderer
   DependencyGraphZoomOverrides.tsx AppRootElementBlueprint — global d3-zoom patch
   GraphPaletteConfigLoader.tsx     AppRootElementBlueprint — loads palette config overrides
+  nodeDisplay.ts                   config reader + field resolver for node text lines
   graphUtils.ts                    kind -> {icon, colour} palette, badge helpers
   index.ts                         default export: catalogGraphModuleExtendedRelations
 config.d.ts                        schema for catalogGraph.extendedRelations.palette
@@ -95,3 +96,15 @@ toggles its own fixed-position overlay via local `isFullscreen` state. If
 switching back to `DependencyGraph`'s built-in fullscreen, re-verify it against
 `DependencyGraphZoomOverrides` (which selects the graph via
 `svg#dependency-graph` in the DOM) — not verified to be compatible.
+
+## Node text lines are config-selectable
+
+`catalogGraph.extendedRelations.node.{title,subtitle}` picks which entity
+field fills each line (`nodeDisplay.ts`: `readNodeDisplayConfig` +
+`resolveNodeField`, pure and unit-tested). Unlike the palette this is read
+inside `CustomGraphNode` via `useApi(configApiRef)` — it's a component, so no
+module-level state needed. `system`/`owner` titles come from
+`useRelatedEntityTitle`, which only looks the entity up when a line uses it
+(the hook is always called, against a `__none__` placeholder ref otherwise).
+Defaults (`title` + `system`) match the pre-config behaviour. Bare `owner`
+refs resolve with default kind `Group`.
