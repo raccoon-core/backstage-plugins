@@ -1,5 +1,11 @@
 # @raccoon-core/backstage-plugin-catalog-graph-module-extended-relations
 
+## 0.4.0
+
+### Minor Changes
+
+- eb8d6b0: Made the text shown in graph nodes configurable via `catalogGraph.extendedRelations.node.title` / `.subtitle` (`title`, `name`, `system`, `owner`, `description`, `type`, `lifecycle`; subtitle also accepts `none`). Defaults match the previous behaviour.
+
 ## 0.3.0
 
 ### Minor Changes
