@@ -5,12 +5,13 @@ import {
   stringifyEntityRef,
 } from '@backstage/catalog-model';
 import { DependencyGraphTypes } from '@backstage/core-components';
+import { configApiRef, useApi } from '@backstage/core-plugin-api';
 import { EntityNode } from '@backstage/plugin-catalog-graph';
 import { useEntityPresentation } from '@backstage/plugin-catalog-react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import clsx from 'clsx';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { ElementType } from 'react';
 import {
   getNodeBadgeLabel,
@@ -19,6 +20,7 @@ import {
   getNodeTintFill,
   withAlpha,
 } from './graphUtils';
+import { readNodeDisplayConfig, resolveNodeField } from './nodeDisplay';
 
 function EntityIcon({
   icon,
@@ -76,6 +78,32 @@ const useStyles = makeStyles(
   { name: 'CustomCatalogGraphNode' },
 );
 
+/**
+ * Display title of the entity referenced by `rawRef` (e.g. `spec.system`),
+ * or `undefined` when unset or when `enabled` is false. Always calls the hook
+ * (rules of hooks) against a placeholder ref when there is nothing to look up.
+ */
+function useRelatedEntityTitle(
+  entity: Entity,
+  rawRef: unknown,
+  defaultKind: string,
+  enabled: boolean,
+): string | undefined {
+  const ref = enabled && typeof rawRef === 'string' && rawRef ? rawRef : '';
+  const entityRef = ref
+    ? stringifyEntityRef(
+        parseEntityRef(ref, {
+          defaultKind,
+          defaultNamespace: entity.metadata.namespace ?? DEFAULT_NAMESPACE,
+        }),
+      )
+    : `${defaultKind.toLowerCase()}:${DEFAULT_NAMESPACE}/__none__`;
+  const presentation = useEntityPresentation(entityRef, {
+    defaultNamespace: DEFAULT_NAMESPACE,
+  });
+  return ref ? presentation.primaryTitle ?? ref : undefined;
+}
+
 export function CustomGraphNode({
   node: { id, entity, focused, onClick },
 }: DependencyGraphTypes.RenderNodeProps<EntityNode>) {
@@ -94,24 +122,28 @@ export function CustomGraphNode({
     defaultNamespace: DEFAULT_NAMESPACE,
   });
 
-  const rawSystemName =
-    entityObj.spec?.system && typeof entityObj.spec.system === 'string'
-      ? entityObj.spec.system
-      : undefined;
-  const systemEntityRef = rawSystemName
-    ? stringifyEntityRef(
-        parseEntityRef(rawSystemName, {
-          defaultKind: 'System',
-          defaultNamespace: entityObj.metadata.namespace ?? DEFAULT_NAMESPACE,
-        }),
-      )
-    : `system:${DEFAULT_NAMESPACE}/__none__`;
-  const systemPresentation = useEntityPresentation(systemEntityRef, {
-    defaultNamespace: DEFAULT_NAMESPACE,
-  });
-  const productDisplayName = rawSystemName
-    ? systemPresentation.primaryTitle ?? rawSystemName
-    : undefined;
+  const config = useApi(configApiRef);
+  const nodeDisplay = useMemo(() => readNodeDisplayConfig(config), [config]);
+
+  const systemTitle = useRelatedEntityTitle(
+    entityObj,
+    entityObj.spec?.system,
+    'System',
+    nodeDisplay.title === 'system' || nodeDisplay.subtitle === 'system',
+  );
+  const ownerTitle = useRelatedEntityTitle(
+    entityObj,
+    entityObj.spec?.owner,
+    'Group',
+    nodeDisplay.title === 'owner' || nodeDisplay.subtitle === 'owner',
+  );
+  const fieldSources = {
+    entity: entityObj,
+    presentationTitle: entityRefPresentationSnapshot.primaryTitle,
+    systemTitle,
+    ownerTitle,
+  };
+  const subtitleText = resolveNodeField(nodeDisplay.subtitle, fieldSources);
 
   useLayoutEffect(() => {
     if (titleRef.current) {
@@ -147,7 +179,10 @@ export function CustomGraphNode({
     }
   }, [badgeWidth]);
 
-  const baseTitle = entityRefPresentationSnapshot.primaryTitle ?? id;
+  const baseTitle =
+    resolveNodeField(nodeDisplay.title, fieldSources) ??
+    entityRefPresentationSnapshot.primaryTitle ??
+    id;
   const specType = entityObj.spec?.type as string | undefined;
   const kindLabel = getNodeBadgeLabel(entity.kind, specType);
   const nodeIcon =
@@ -166,7 +201,7 @@ export function CustomGraphNode({
   const contentWidth = accentWidth + paddedIconWidth + textWidth + padding * 2;
   const paddedWidth = Math.max(contentWidth, minWidthForBadge);
   const contentHeight =
-    titleHeight + (productDisplayName ? lineGap + subtitleHeight : 0);
+    titleHeight + (subtitleText ? lineGap + subtitleHeight : 0);
   const paddedHeight = contentHeight + padding * 2;
 
   const textCenterX = accentWidth + (textWidth + padding * 2) / 2;
@@ -276,7 +311,7 @@ export function CustomGraphNode({
       >
         {baseTitle}
       </text>
-      {productDisplayName && (
+      {subtitleText && (
         <text
           ref={subtitleRef}
           className={classes.secondaryText}
@@ -285,7 +320,7 @@ export function CustomGraphNode({
           textAnchor="middle"
           alignmentBaseline="middle"
         >
-          {productDisplayName}
+          {subtitleText}
         </text>
       )}
       <title>{entityRefPresentationSnapshot.entityRef}</title>

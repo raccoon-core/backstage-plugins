@@ -43,6 +43,26 @@ has it, and fall back to native catalog relations otherwise.
 
 ## Configuration
 
+### Node text
+
+Choose which entity fields the node's two text lines show. Both are optional;
+the defaults reproduce the previous behaviour (`title` + `system`):
+
+```yaml
+catalogGraph:
+  extendedRelations:
+    node:
+      title: name # title | name | system | owner | description | type | lifecycle
+      subtitle: system # same values, or `none` to hide the second line
+```
+
+`system`/`owner` show the referenced entity's display title. If the chosen
+`title` field is missing on an entity the node falls back to its display name;
+a missing `subtitle` field just hides the second line. `description` is
+truncated to 40 characters.
+
+### Node colors
+
 The node color palette (same one reused by `getNodeColor`/`getNodeTintFill`
 for e.g. search result kind badges) can be overridden per app via
 `app-config.yaml`. Each entry overrides either a whole `kind`'s palette, or —
